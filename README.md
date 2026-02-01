@@ -1346,3 +1346,21 @@ VCP 不仅是一个技术框架，更是一个旨在释放 AI 无限潜能、并
 ---
 
 *VCP - 让 AI 拥有真正的灵魂*
+---
+
+## 🍎 macOS 部署特别说明 (macOS Deployment Notes)
+
+如果您在 macOS 上运行 `./start_server.sh` 时遇到 **"无法验证开发者"** 或 **"恶意软件警告"**，这是因为 macOS 的安全机制拦截了未签名的二进制插件。
+
+### 快速修复方案：
+在终端执行以下命令来解除拦截：
+```bash
+chmod +x fix_macos_security.sh
+./fix_macos_security.sh
+```
+
+### 手动修复方案：
+1. 打开 **系统设置 (System Settings)** -> **隐私与安全性 (Privacy & Security)**。
+2. 向下滚动找到安全性部分，点击 **"仍要打开 (Open Anyway)"**。
+3. 或者在终端手动执行：
+   `sudo xattr -rd com.apple.quarantine rust-vexus-lite/vexus-lite.darwin-arm64.node`
