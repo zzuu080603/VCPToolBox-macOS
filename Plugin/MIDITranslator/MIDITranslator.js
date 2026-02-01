@@ -5,7 +5,14 @@ import * as path from 'path';
 import dotenv from 'dotenv';
 
 const require = createRequire(import.meta.url);
-const { MidiQuantizer } = require('./midi_quantizer.node');
+let MidiQuantizer;
+try {
+    const midiModule = require('./midi_quantizer.node');
+    MidiQuantizer = midiModule.MidiQuantizer;
+} catch (e) {
+    console.error('[MIDITranslator] 无法加载原生模块 midi_quantizer.node:', e.message);
+    console.error('[MIDITranslator] 请确保已运行 ./fix_macos_security.sh 并安装了必要的构建工具。');
+}
 
 let serverConfig = {};
 let pluginConfig = {};  // 新增：插件配置存储
@@ -105,6 +112,7 @@ async function handleParseMidi(params) {
             return { status: 'error', error: '缺少 fileName 或 hexData' };
         }
         
+        if (!MidiQuantizer) return { status: 'error', error: '原生模块 MidiQuantizer 未加载，请检查 macOS 安全设置' };
         const quantizer = new MidiQuantizer();
         const res = rustSafe(() => quantizer.quantize(midiData));
         if (!res.ok) return { status: 'error', error: res.error };
@@ -122,6 +130,7 @@ async function handleGenerateMidi(params) {
   if (!dslContent) return { status: 'error', error: '缺少 dslContent' };
 
   try {
+    if (!MidiQuantizer) return { status: 'error', error: '原生模块 MidiQuantizer 未加载' };
     const quantizer = new MidiQuantizer();
     const res = rustSafe(() => quantizer.generate(dslContent));
     if (!res.ok) return { status: 'error', error: res.error };
@@ -152,6 +161,7 @@ async function handleListMidiFiles() {
 }
 
 async function handleValidateDSL(params) {
+    if (!MidiQuantizer) return { status: 'error', error: '原生模块 MidiQuantizer 未加载' };
     const quantizer = new MidiQuantizer();
     return { status: 'success', isValid: quantizer.validate_dsl(params.dslContent) };
 }
