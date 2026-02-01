@@ -1,0 +1,19 @@
+{
+  "name": "MacSearch",
+  "version": "1.0.0",
+  "description": "macOS native file search using Spotlight (mdfind)",
+  "author": "VCP Team",
+  "entryPoint": "mac-search-controller.js",
+  "type": "synchronous",
+  "parameters": {
+    "query": {
+      "type": "string",
+      "description": "Search query for Spotlight"
+    },
+    "maxResults": {
+      "type": "number",
+      "description": "Maximum number of results to return",
+      "default": 50
+    }
+  }
+}
