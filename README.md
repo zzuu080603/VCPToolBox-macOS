@@ -1364,3 +1364,16 @@ chmod +x fix_macos_security.sh
 2. 向下滚动找到安全性部分，点击 **"仍要打开 (Open Anyway)"**。
 3. 或者在终端手动执行：
    `sudo xattr -rd com.apple.quarantine rust-vexus-lite/vexus-lite.darwin-arm64.node`
+
+### 更新到最新代码 (Pull the latest code)
+
+仓库自带两个更新脚本，均可在任意目录下执行（脚本会自动切换到仓库根目录）：
+
+```bash
+./update_no_dep.sh   # 只拉取最新代码，不安装依赖
+./update.sh          # 拉取最新代码并更新依赖（Python + Node.js）
+```
+
+脚本使用 `git pull --ff-only`：只有在真正拉取成功后才会输出 `Update complete` 并显示更新后的提交；如果本地有未提交改动、当前分支已分叉或远端不可达，脚本会以非零状态退出并给出修复提示，不会出现“提示成功但实际上没有拉取”的情况。
+
+> 如果脚本的可执行位丢失（例如以压缩包方式下载仓库），请先执行 `chmod +x update.sh update_no_dep.sh`。
